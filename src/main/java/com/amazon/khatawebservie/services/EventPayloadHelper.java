@@ -57,7 +57,7 @@ public class EventPayloadHelper {
         if(eventPayload.getFailureStatus().equals("false")){
             AccountingEvent accountingEvent = accountingEventMapper.toAccountingEvent(eventPayload,businessEvent);
             Gson account = new GsonBuilder().setPrettyPrinting().create();
-            String accountingEventString = account.toJson(accountingEvent);
+            final String accountingEventString = account.toJson(accountingEvent);
             eventPayload.setAccountingEvent(accountingEventString);
             eventPayload.setFolioId("FolioId|"+eventPayload.getIdempotenceId());
         }

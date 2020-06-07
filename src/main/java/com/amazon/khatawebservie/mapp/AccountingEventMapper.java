@@ -19,14 +19,14 @@ public class AccountingEventMapper {
      * @return newly generated accounting event
      */
     public AccountingEvent toAccountingEvent(@NonNull EventPayload eventPayload, @NonNull BusinessEvent businessEvent){
-        AccountingEvent accountingEvent = new AccountingEvent();
-        accountingEvent.setEventType(businessEvent.getEventDetails().getEventType());
-        accountingEvent.setCountryCode(businessEvent.getAdditionalDetails().get("marketplace"));
-        accountingEvent.setIdempotenceId(eventPayload.getIdempotenceId());
-        accountingEvent.setIdempotenceVersion(eventPayload.getIdempotenceVersion());
-        accountingEvent.setMarketplaceId(eventPayload.getMarketplaceId());
-        accountingEvent.setCurrencyCode(businessEvent.getAmountDetails().getCurrency());
-        accountingEvent.setValue(eventPayload.getAmount());
-        return accountingEvent;
+        return AccountingEvent.builder()
+        .eventType(businessEvent.getEventDetails().getEventType())
+        .countryCode(businessEvent.getAdditionalDetails().get("marketplace"))
+        .idempotenceId(eventPayload.getIdempotenceId())
+        .idempotenceVersion(eventPayload.getIdempotenceVersion())
+        .marketplaceId(eventPayload.getMarketplaceId())
+        .currencyCode(businessEvent.getAmountDetails().getCurrency())
+        .value(eventPayload.getAmount())
+        .build();
     }
 }
