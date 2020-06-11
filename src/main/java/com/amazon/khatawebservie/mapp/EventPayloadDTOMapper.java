@@ -2,6 +2,7 @@ package com.amazon.khatawebservie.mapp;
 
 import com.amazon.khatawebservie.model.EventPayload;
 import com.amazon.khatawebservie.model.EventPayloadDTO;
+import lombok.NonNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
@@ -20,24 +21,26 @@ public class EventPayloadDTOMapper {
      * @param eventPayloadDTO input
      * @return newly generated event payload
      */
-    public EventPayload toEventPayload(EventPayloadDTO eventPayloadDTO){
-        EventPayload eventPayload = new EventPayload();
-        eventPayload.setIdempotenceId(eventPayloadDTO.getIdempotenceId());
-        eventPayload.setIdempotenceVersion(eventPayloadDTO.getIdempotenceVersion());
-        eventPayload.setBusinessEventString(eventPayloadDTO.getBusinessEventString());
-        eventPayload.setAmount(eventPayloadDTO.getAmount());
-        eventPayload.setMarketplaceId(eventPayloadDTO.getMarketplaceId());
-        eventPayload.setAccountingEvent(eventPayloadDTO.getAccountingEvent());
-        eventPayload.setFolioId(eventPayloadDTO.getFolioId());
-        eventPayload.setFailureMessage(eventPayloadDTO.getFailureMessage());
-        eventPayload.setFailureStatus(eventPayloadDTO.getFailureStatus());
-        eventPayload.setProcessAfterTime(eventPayloadDTO.getProcessAfterTime());
-        eventPayload.setRetryCount(eventPayloadDTO.getRetryCount());
-        eventPayload.setInProcessStatus(eventPayloadDTO.getInProcessStatus());
-        eventPayload.setCreationTime(eventPayloadDTO.getCreationTime());
-        eventPayload.setExpirationTime(eventPayloadDTO.getExpirationTime());
-        eventPayload.setRecordVersion(eventPayloadDTO.getRecordVersion());
-        return eventPayload;
+    public EventPayload toEventPayload(@NonNull EventPayloadDTO eventPayloadDTO){
+
+        return EventPayload.builder()
+                .idempotenceId(eventPayloadDTO.getIdempotenceId())
+                .idempotenceVersion(eventPayloadDTO.getIdempotenceVersion())
+                .businessEventString(eventPayloadDTO.getBusinessEventString())
+                .amount(eventPayloadDTO.getAmount())
+                .marketplaceId(eventPayloadDTO.getMarketplaceId())
+                .accountingEvent(eventPayloadDTO.getAccountingEvent())
+                .folioId(eventPayloadDTO.getFolioId())
+                .failureMessage(eventPayloadDTO.getFailureMessage())
+                .failureStatus(eventPayloadDTO.getFailureStatus())
+                .processAfterTime(eventPayloadDTO.getProcessAfterTime())
+                .retryCount(eventPayloadDTO.getRetryCount())
+                .inProcessStatus(eventPayloadDTO.getInProcessStatus())
+                .creationTime(eventPayloadDTO.getCreationTime())
+                .expirationTime(eventPayloadDTO.getExpirationTime())
+                .recordVersion(eventPayloadDTO.getRecordVersion())
+                .build();
+
     }
 
     /**
@@ -45,7 +48,7 @@ public class EventPayloadDTOMapper {
      * @param eventPayloadDTOList input list of event payload DTO
      * @return list of newly created eventPayloads
      */
-    public List<EventPayload> toListEventPayload(List<EventPayloadDTO> eventPayloadDTOList){
+    public List<EventPayload> toListEventPayload(@NonNull List<EventPayloadDTO> eventPayloadDTOList){
         List<EventPayload> eventPayloadList =new ArrayList<EventPayload>();
         eventPayloadDTOList.forEach(eventPayloadDTO -> {
             EventPayload eventPayload = toEventPayload(eventPayloadDTO);
@@ -61,22 +64,22 @@ public class EventPayloadDTOMapper {
      */
     public EventPayloadDTO toEventPayloadDTO(EventPayload eventPayload)
     {
-        EventPayloadDTO eventPayloadDTO = new EventPayloadDTO();
-        eventPayloadDTO.setIdempotenceId(eventPayload.getIdempotenceId());
-        eventPayloadDTO.setIdempotenceVersion(eventPayload.getIdempotenceVersion());
-        eventPayloadDTO.setBusinessEventString(eventPayload.getBusinessEventString());
-        eventPayloadDTO.setAmount(eventPayload.getAmount());
-        eventPayloadDTO.setMarketplaceId(eventPayload.getMarketplaceId());
-        eventPayloadDTO.setAccountingEvent(eventPayload.getAccountingEvent());
-        eventPayloadDTO.setFolioId(eventPayload.getFolioId());
-        eventPayloadDTO.setFailureMessage(eventPayload.getFailureMessage());
-        eventPayloadDTO.setFailureStatus(eventPayload.getFailureStatus());
-        eventPayloadDTO.setProcessAfterTime(eventPayload.getProcessAfterTime());
-        eventPayloadDTO.setRetryCount(eventPayload.getRetryCount());
-        eventPayloadDTO.setInProcessStatus(eventPayload.getInProcessStatus());
-        eventPayloadDTO.setCreationTime(eventPayload.getCreationTime());
-        eventPayloadDTO.setExpirationTime(eventPayload.getExpirationTime());
-        eventPayloadDTO.setRecordVersion(eventPayload.getRecordVersion());
-        return eventPayloadDTO;
+        return EventPayloadDTO.builder()
+                .idempotenceId(eventPayload.getIdempotenceId())
+                .idempotenceVersion(eventPayload.getIdempotenceVersion())
+                .businessEventString(eventPayload.getBusinessEventString())
+                .amount(eventPayload.getAmount())
+                .marketplaceId(eventPayload.getMarketplaceId())
+                .accountingEvent(eventPayload.getAccountingEvent())
+                .folioId(eventPayload.getFolioId())
+                .failureMessage(eventPayload.getFailureMessage())
+                .failureStatus(eventPayload.getFailureStatus())
+                .processAfterTime(eventPayload.getProcessAfterTime())
+                .retryCount(eventPayload.getRetryCount())
+                .inProcessStatus(eventPayload.getInProcessStatus())
+                .creationTime(eventPayload.getCreationTime())
+                .expirationTime(eventPayload.getExpirationTime())
+                .recordVersion(eventPayload.getRecordVersion())
+                .build();
     }
 }

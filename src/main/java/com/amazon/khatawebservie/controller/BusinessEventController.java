@@ -2,19 +2,15 @@ package com.amazon.khatawebservie.controller;
 
 import com.amazon.khatawebservie.exceptions.KhataBadRequestException;
 import com.amazon.khatawebservie.mapp.BusinessEventMapper;
-import com.amazon.khatawebservie.mapp.EventPayloadDTOMapper;
 import com.amazon.khatawebservie.model.BusinessEvent;
 import com.amazon.khatawebservie.model.EventPayload;
-import com.amazon.khatawebservie.model.EventPayloadDTO;
-import com.amazon.khatawebservie.repository.BusinessEventRepository;
+import com.amazon.khatawebservie.repository.EventPayloadDAO;
 import com.amazon.khatawebservie.services.EventPayloadHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * API class
@@ -27,31 +23,30 @@ public class BusinessEventController {
     /**
      *  Helper class to validate and transform input Business Event accordingly
      */
-    @Autowired
     private EventPayloadHelper eventPayloadHelper;
 
     /**
+     * DAO to perform operation in database
+     */
+    private EventPayloadDAO eventPayloadDAO;
+    /**
      *  Mapper class to map BusinessEvent and EventPayload
      */
-    @Autowired
     private BusinessEventMapper businessEventMapper;
 
-    /**
-     *  Repository to add input events in format of EventPayloadDTO
-     */
-    @Autowired
-    private BusinessEventRepository businessEventRepository;
+    public BusinessEventController(EventPayloadHelper eventPayloadHelper, EventPayloadDAO eventPayloadDAO, BusinessEventMapper businessEventMapper) {
+        this.eventPayloadHelper = eventPayloadHelper;
+        this.eventPayloadDAO = eventPayloadDAO;
+        this.businessEventMapper = businessEventMapper;
+    }
 
-    @Autowired
-    private EventPayloadDTOMapper eventPayloadDTOMapper;
     /**
      *  GET Method
      *  Output all eventPayload converted from all EventPayloadDTOs of Repository
      */
     @GetMapping("/events")
     public ResponseEntity<List<EventPayload>> findAll() {
-        List<EventPayloadDTO> eventPayloadDTOS = businessEventRepository.findAll();
-        List<EventPayload> eventPayloads = eventPayloadDTOMapper.toListEventPayload(eventPayloadDTOS);
+        final List<EventPayload> eventPayloads = eventPayloadDAO.findAll();
         return ResponseEntity.ok(eventPayloads);
     }
 
@@ -66,12 +61,10 @@ public class BusinessEventController {
      */
     @PostMapping("/events")
     public ResponseEntity<EventPayload> create(@RequestBody BusinessEvent businessEvent) throws KhataBadRequestException {
-        System.out.println(businessEvent);
-        EventPayload eventPayload = businessEventMapper.toEventPayload(businessEvent);
+        final EventPayload eventPayload = businessEventMapper.toEventPayload(businessEvent);
         eventPayloadHelper.validate(eventPayload);
         eventPayloadHelper.transform(eventPayload);
-        EventPayloadDTO eventPayloadDTO = eventPayloadDTOMapper.toEventPayloadDTO(eventPayload);
-        businessEventRepository.save(eventPayloadDTO);
+        eventPayloadDAO.save(eventPayload);
         return ResponseEntity.status(HttpStatus.CREATED).body(eventPayload);
     }
 
@@ -83,8 +76,7 @@ public class BusinessEventController {
      */
     @GetMapping("event/{idempotenceId}")
     public ResponseEntity<?> findById(@PathVariable String idempotenceId) {
-        Optional<EventPayloadDTO> eventPayloadDTO = businessEventRepository.findById(idempotenceId);
-        EventPayload eventPayload = eventPayloadDTOMapper.toEventPayload(eventPayloadDTO.get());
+        final EventPayload eventPayload = eventPayloadDAO.findById(idempotenceId);
         return ResponseEntity.ok().body(eventPayload);
     }
 
@@ -102,8 +94,7 @@ public class BusinessEventController {
         eventPayload.setIdempotenceId(idempotenceId);
         eventPayloadHelper.validate(eventPayload);
         eventPayloadHelper.transform(eventPayload);
-        EventPayloadDTO eventPayloadDTO = eventPayloadDTOMapper.toEventPayloadDTO(eventPayload);
-        businessEventRepository.save(eventPayloadDTO);
+        eventPayloadDAO.save(eventPayload);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(eventPayload);
     }
 
@@ -114,7 +105,7 @@ public class BusinessEventController {
      */
     @DeleteMapping("event/{idempotenceId}")
     public ResponseEntity delete(@PathVariable String idempotenceId) {
-        businessEventRepository.deleteById(idempotenceId);
+        eventPayloadDAO.deleteById(idempotenceId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }
